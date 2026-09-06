@@ -35,7 +35,7 @@ const rooms = new Elysia({ prefix: "/room" })
       const ttl = await redis.ttl(`meta:${auth.roomId}`);
       return { ttl: ttl > 0 ? ttl : 0 };
     },
-    { query: z.object({ roomId: z.string() }) }
+    { query: z.object({ roomId: z.string() }) },
   )
   .delete(
     "/",
@@ -50,7 +50,7 @@ const rooms = new Elysia({ prefix: "/room" })
         redis.del(`history:${auth.roomId}`),
       ]);
     },
-    { query: z.object({ roomId: z.string() }) }
+    { query: z.object({ roomId: z.string() }) },
   );
 
 const messages = new Elysia({ prefix: "/messages" })
@@ -93,7 +93,7 @@ const messages = new Elysia({ prefix: "/messages" })
         sender: z.string().max(100),
         text: z.string().max(1000),
       }),
-    }
+    },
   )
   .get(
     "/",
@@ -101,7 +101,7 @@ const messages = new Elysia({ prefix: "/messages" })
       const messages = await redis.lrange<Message>(
         `messages:${auth.roomId}`,
         0,
-        -1
+        -1,
       );
 
       return {
@@ -113,10 +113,13 @@ const messages = new Elysia({ prefix: "/messages" })
     },
     {
       query: z.object({ roomId: z.string() }),
-    }
+    },
   );
 
-const app = new Elysia({ prefix: "/api" }).use(cors(getCorsConfig())).use(rooms).use(messages);
+const app = new Elysia({ prefix: "/api" })
+  .use(cors(getCorsConfig()))
+  .use(rooms)
+  .use(messages);
 
 export const GET = app.fetch;
 export const POST = app.fetch;

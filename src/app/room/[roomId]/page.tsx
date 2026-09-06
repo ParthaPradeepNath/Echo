@@ -48,7 +48,7 @@ const Page = () => {
       if (deadlineRef.current === null) return;
       const remaining = Math.max(
         0,
-        Math.ceil((deadlineRef.current - Date.now()) / 1000)
+        Math.ceil((deadlineRef.current - Date.now()) / 1000),
       );
       setTimeRemaining(remaining);
 
@@ -73,7 +73,7 @@ const Page = () => {
     mutationFn: async ({ text }: { text: string }) => {
       await client.messages.post(
         { sender: username, text },
-        { query: { roomId } }
+        { query: { roomId } },
       );
       setInput("");
     },
@@ -93,11 +93,11 @@ const Page = () => {
     },
   });
 
-  const {mutate: destroyRoom} = useMutation({
+  const { mutate: destroyRoom } = useMutation({
     mutationFn: async () => {
       await client.room.delete(null, { query: { roomId } });
-    }
-  })
+    },
+  });
 
   const copyLink = () => {
     const url = window.location.href; // where the user is currently is
@@ -108,8 +108,8 @@ const Page = () => {
   };
 
   return (
-    <main className="flex flex-col h-screen max-h-screen overflow-hidden">
-      <header className="border-b border-zinc-800 p-4 flex items-center justify-between bg-zinc-900/30">
+    <main className="flex h-screen max-h-screen flex-col overflow-hidden">
+      <header className="flex items-center justify-between border-b border-zinc-800 bg-zinc-900/30 p-4">
         <div className="flex items-center gap-4">
           <div className="flex flex-col">
             <span className="text-xs text-zinc-500 uppercase">Room ID</span>
@@ -117,7 +117,7 @@ const Page = () => {
               <span className="font-bold text-green-500">{roomId}</span>
               <button
                 onClick={copyLink}
-                className="text-[10px] bg-zinc-800 hover:bg-zinc-700 px-2 py-0.5 rounded text-zinc-400 hover:text-zinc-200 transition-colors"
+                className="rounded bg-zinc-800 px-2 py-0.5 text-[10px] text-zinc-400 transition-colors hover:bg-zinc-700 hover:text-zinc-200"
               >
                 {copyStatus}
               </button>
@@ -131,7 +131,7 @@ const Page = () => {
               Self-Destruct
             </span>
             <span
-              className={`text-sm font-bold flex items-center gap-2 ${
+              className={`flex items-center gap-2 text-sm font-bold ${
                 timeRemaining !== null && timeRemaining < 60
                   ? "text-red-500"
                   : "text-amber-500"
@@ -144,25 +144,28 @@ const Page = () => {
           </div>
         </div>
 
-        <button onClick={() => destroyRoom()} className="text-xs bg-zinc-800 hover:bg-red-600 px-3 py-1.5 rounded text-zinc-400 hover:text-white font-bold transition-all group flex items-center gap-2 disabled:opacity-50">
+        <button
+          onClick={() => destroyRoom()}
+          className="group flex items-center gap-2 rounded bg-zinc-800 px-3 py-1.5 text-xs font-bold text-zinc-400 transition-all hover:bg-red-600 hover:text-white disabled:opacity-50"
+        >
           <span className="group-hover:animate-pulse">💣</span>
           DESTROY NOW
         </button>
       </header>
 
       {/* MESSAGES */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin">
+      <div className="scrollbar-thin flex-1 space-y-4 overflow-y-auto p-4">
         {messages?.messages.length === 0 && (
-          <div className="flex items-center justify-center h-full">
-            <p className="text-zinc-600 text-sm font-mono">
+          <div className="flex h-full items-center justify-center">
+            <p className="font-mono text-sm text-zinc-600">
               No messages yet, Start the conversation.
             </p>
           </div>
         )}
         {messages?.messages.map((msg) => (
-          <div key={msg.id} className="flex items-start flex-col">
-            <div className="max-w-[80%] group">
-              <div className="flex items-baseline gap-3 mb-1">
+          <div key={msg.id} className="flex flex-col items-start">
+            <div className="group max-w-[80%]">
+              <div className="mb-1 flex items-baseline gap-3">
                 <span
                   className={`text-xs font-bold ${
                     msg.sender === username ? "text-green-500" : "text-blue-500"
@@ -174,7 +177,7 @@ const Page = () => {
                   {format(msg.timestamp, "hh:mm a")}
                 </span>
               </div>
-              <p className="text-sm text-zinc-300 leading-relaxed break-all">
+              <p className="text-sm leading-relaxed break-all text-zinc-300">
                 {msg.text}
               </p>
             </div>
@@ -182,10 +185,10 @@ const Page = () => {
         ))}
       </div>
 
-      <div className="p-4 border-t border-zinc-800 bg-zinc-900/30">
+      <div className="border-t border-zinc-800 bg-zinc-900/30 p-4">
         <div className="flex gap-4">
-          <div className="flex-1 relative group">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-green-500 animate-pulse">
+          <div className="group relative flex-1">
+            <span className="absolute top-1/2 left-4 -translate-y-1/2 animate-pulse text-green-500">
               {">"}
             </span>
             <input
@@ -202,7 +205,7 @@ const Page = () => {
               }}
               placeholder="Type message..."
               onChange={(e) => setInput(e.target.value)}
-              className="w-full bg-black border border-zinc-800 focus:border-zinc-700 focus:outline-none transition-colors text-zinc-100 placeholder:text-zinc-700 py-3 pl-8 pr-4 text-sm"
+              className="w-full border border-zinc-800 bg-black py-3 pr-4 pl-8 text-sm text-zinc-100 transition-colors placeholder:text-zinc-700 focus:border-zinc-700 focus:outline-none"
             />
           </div>
 
@@ -212,7 +215,7 @@ const Page = () => {
               inputRef.current?.focus();
             }}
             disabled={!input.trim() || isPending}
-            className="bg-zinc-800 text-zinc-400 px-6 text-sm font-bold hover:text-zinc-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className="cursor-pointer bg-zinc-800 px-6 text-sm font-bold text-zinc-400 transition-all hover:text-zinc-200 disabled:cursor-not-allowed disabled:opacity-50"
           >
             SEND
           </button>

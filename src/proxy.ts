@@ -13,7 +13,7 @@ export const proxy = async (req: NextRequest) => {
   const roomId = roomMatch[1];
 
   const meta = await redis.hgetall<{ connected: string[]; createdAt: number }>(
-    `meta:${roomId}`
+    `meta:${roomId}`,
   );
 
   if (!meta) {
@@ -28,8 +28,8 @@ export const proxy = async (req: NextRequest) => {
   }
 
   // USER IS NOT ALLOWED TO JOIN
-  if(meta.connected.length >= 2) {
-    return NextResponse.redirect(new URL("/?error=room-full", req.url))
+  if (meta.connected.length >= 2) {
+    return NextResponse.redirect(new URL("/?error=room-full", req.url));
   }
 
   const response = NextResponse.next();

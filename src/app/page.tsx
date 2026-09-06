@@ -38,35 +38,35 @@ function Lobby() {
     <main className="flex min-h-screen flex-col items-center justify-center p-4">
       <div className="w-full max-w-md space-y-8">
         {wasDestroyed && (
-          <div className="bg-red-950/50 border border-red-900 p-4 text-center">
-            <p className="text-red-500 text-sm font-bold">ROOM DESTROYED</p>
-            <p className="text-zinc-500 text-xs mt-1">
+          <div className="border border-red-900 bg-red-950/50 p-4 text-center">
+            <p className="text-sm font-bold text-red-500">ROOM DESTROYED</p>
+            <p className="mt-1 text-xs text-zinc-500">
               All messages were permanently deleted.
             </p>
           </div>
         )}
         {error === "room-not-found" && (
-          <div className="bg-red-950/50 border border-red-900 p-4 text-center">
-            <p className="text-red-500 text-sm font-bold">ROOM NOT FOUND</p>
-            <p className="text-zinc-500 text-xs mt-1">
+          <div className="border border-red-900 bg-red-950/50 p-4 text-center">
+            <p className="text-sm font-bold text-red-500">ROOM NOT FOUND</p>
+            <p className="mt-1 text-xs text-zinc-500">
               This room may have expired or never existed.
             </p>
           </div>
         )}
         {error === "room-full" && (
-          <div className="bg-red-950/50 border border-red-900 p-4 text-center">
-            <p className="text-red-500 text-sm font-bold">ROOM FULL</p>
-            <p className="text-zinc-500 text-xs mt-1">
+          <div className="border border-red-900 bg-red-950/50 p-4 text-center">
+            <p className="text-sm font-bold text-red-500">ROOM FULL</p>
+            <p className="mt-1 text-xs text-zinc-500">
               This room has reached its maximum capacity.
             </p>
           </div>
         )}
 
-        <div className="text-center space-y-2">
+        <div className="space-y-2 text-center">
           <h1 className="text-2xl font-bold tracking-tight text-green-500">
             {">"}private_chat
           </h1>
-          <p className="text-zinc-500 text-sm">
+          <p className="text-sm text-zinc-500">
             A private, self-destructing chat room.
           </p>
         </div>
@@ -78,7 +78,7 @@ function Lobby() {
               </label>
 
               <div className="flex items-center gap-3">
-                <div className="flex-1 bg-zinc-950 border border-zinc-800 p-3 text-sm text-zinc-400 font-mono">
+                <div className="flex-1 border border-zinc-800 bg-zinc-950 p-3 font-mono text-sm text-zinc-400">
                   {username}
                 </div>
               </div>
@@ -86,7 +86,7 @@ function Lobby() {
 
             <button
               onClick={() => createRoom()}
-              className="w-full bg-zinc-100 text-black p-3 text-sm font-bold hover:bg-zinc-50 hover:text-black transition-colors mt-2 cursor-pointer disabled:opacity-50"
+              className="mt-2 w-full cursor-pointer bg-zinc-100 p-3 text-sm font-bold text-black transition-colors hover:bg-zinc-50 hover:text-black disabled:opacity-50"
             >
               CREATE SECURE ROOM
             </button>
