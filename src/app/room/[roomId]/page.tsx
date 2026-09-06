@@ -37,32 +37,29 @@ const Page = () => {
     },
   });
 
-  useEffect(() => {
-    if (ttlData?.ttl !== undefined) {
-      setTimeRemaining(ttlData.ttl);
-    }
-  }, [ttlData]);
+  const deadlineRef = useRef<number | null>(null);
 
   useEffect(() => {
-    if (timeRemaining === null || timeRemaining < 0) return;
+    if (ttlData?.ttl === undefined || deadlineRef.current !== null) return;
 
-    if (timeRemaining === 0) {
-      router.push("/?destroyed=true");
-      return;
-    }
+    deadlineRef.current = Date.now() + ttlData.ttl * 1000;
 
     const interval = setInterval(() => {
-      setTimeRemaining((prev) => {
-        if (prev === null || prev <= 1) {
-          clearInterval(interval);
-          return 0;
-        }
-        return prev - 1;
-      });
+      if (deadlineRef.current === null) return;
+      const remaining = Math.max(
+        0,
+        Math.ceil((deadlineRef.current - Date.now()) / 1000)
+      );
+      setTimeRemaining(remaining);
+
+      if (remaining === 0) {
+        clearInterval(interval);
+        router.push("/?destroyed=true");
+      }
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [timeRemaining, router]);
+  }, [ttlData, router]);
 
   const { data: messages, refetch } = useQuery({
     queryKey: ["messages", roomId],
@@ -174,7 +171,7 @@ const Page = () => {
                   {msg.sender === username ? "You" : msg.sender}
                 </span>
                 <span className="text-[10px] text-zinc-600">
-                  {format(msg.timestamp, "hh:mm")}
+                  {format(msg.timestamp, "hh:mm a")}
                 </span>
               </div>
               <p className="text-sm text-zinc-300 leading-relaxed break-all">
@@ -185,8 +182,6 @@ const Page = () => {
         ))}
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin"></div>
-
       <div className="p-4 border-t border-zinc-800 bg-zinc-900/30">
         <div className="flex gap-4">
           <div className="flex-1 relative group">
@@ -195,6 +190,7 @@ const Page = () => {
             </span>
             <input
               autoFocus
+              ref={inputRef}
               type="text"
               value={input}
               onKeyDown={(e) => {

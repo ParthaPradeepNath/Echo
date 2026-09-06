@@ -29,7 +29,7 @@ export function getCorsConfig() {
 
   return {
     origin,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
     credentials: true, // allow cookies/auth headers
     headers: ['Content-Type', 'Authorization'],
     exposeHeaders: ['Content-Length', 'X-JSON-Response-Size'],
