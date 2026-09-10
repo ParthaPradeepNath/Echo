@@ -1,4 +1,4 @@
-# realtime_chat — Project README
+# realtime_chat
 
 Overview
 
@@ -10,7 +10,7 @@ Quick Start (local)
 1. Install
 
 ```bash
-npm install
+bun install
 ```
 
 2. Environment
@@ -22,7 +22,7 @@ npm install
 3. Run dev server
 
 ```bash
-npm run dev
+bun run dev
 ```
 
 Key files
