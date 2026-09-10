@@ -80,9 +80,15 @@ const Page = () => {
         { sender: username, text },
         { query: { roomId } },
       );
-      setInput("");
     },
   });
+
+  const handleSend = (text: string) => {
+    if (!text.trim() || isPending) return;
+    setInput("");
+    sendMessage({ text });
+    inputRef.current?.focus();
+  };
 
   useRealtime({
     channels: [roomId],
@@ -203,10 +209,8 @@ const Page = () => {
               type="text"
               value={input}
               onKeyDown={(e) => {
-                if (e.key === "Enter" && input.trim()) {
-                  // SEND MESSAGE LOGIC HERE
-                  sendMessage({ text: input });
-                  inputRef.current?.focus(); // input should stay focused after sending in the input box
+                if (e.key === "Enter") {
+                  handleSend(input);
                 }
               }}
               placeholder="Type message..."
@@ -216,10 +220,7 @@ const Page = () => {
           </div>
 
           <button
-            onClick={() => {
-              sendMessage({ text: input });
-              inputRef.current?.focus();
-            }}
+            onClick={() => handleSend(input)}
             disabled={!input.trim() || isPending}
             className="cursor-pointer bg-zinc-800 px-6 text-sm font-bold text-zinc-400 transition-all hover:text-zinc-200 disabled:cursor-not-allowed disabled:opacity-50"
           >
