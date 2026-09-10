@@ -28,16 +28,15 @@ export const proxy = async (req: NextRequest) => {
     }
   }
 
-  // Check capacity atomically — rpush + llen, then verify
-  const token = nanoid();
-  await redis.rpush(`connected:${roomId}`, token);
+  // Reject early if the room is already at capacity
   const count = await redis.llen(`connected:${roomId}`);
-
-  if (count > 2) {
-    // Remove the token we just added and reject
-    // (simple dedup — in practice the cookie prevents multiple joins from same browser)
+  if (count >= 2) {
     return NextResponse.redirect(new URL("/?error=room-full", req.url));
   }
+
+  // Issue a fresh token and register this participant
+  const token = nanoid();
+  await redis.rpush(`connected:${roomId}`, token);
 
   const response = NextResponse.next();
 

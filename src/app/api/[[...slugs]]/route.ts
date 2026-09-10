@@ -1,7 +1,7 @@
 import { redis } from "@/lib/redis";
 import { Elysia } from "elysia";
 import { nanoid } from "nanoid";
-import { authMiddleware } from "./auth";
+import { authMiddleware, AuthError } from "./auth";
 import { z } from "zod";
 import { Message, realtime } from "@/lib/realtime";
 import { getCorsConfig } from "@/lib/cors";
@@ -119,6 +119,13 @@ const messages = new Elysia({ prefix: "/messages" })
   );
 
 const app = new Elysia({ prefix: "/api" })
+  .onError(({ code, set, error }) => {
+    if (error instanceof AuthError) {
+      set.status = 401;
+      return { error: "Unauthorized" };
+    }
+    console.error("API ERROR:", code, error);
+  })
   .use(cors(getCorsConfig()))
   .use(rooms)
   .use(messages);
