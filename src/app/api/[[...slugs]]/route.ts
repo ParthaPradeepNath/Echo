@@ -15,7 +15,6 @@ const rooms = new Elysia({ prefix: "/room" })
       const roomId = nanoid();
 
       await redis.hset(`meta:${roomId}`, {
-        connected: [],
         createdAt: Date.now(),
       });
 
@@ -47,6 +46,7 @@ const rooms = new Elysia({ prefix: "/room" })
       await Promise.all([
         redis.del(`meta:${auth.roomId}`),
         redis.del(`messages:${auth.roomId}`),
+        redis.del(`connected:${auth.roomId}`),
         redis.del(`history:${auth.roomId}`),
       ]);
     },
