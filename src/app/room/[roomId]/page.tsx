@@ -26,6 +26,7 @@ const Page = () => {
 
   const [copyStatus, setCopyStatus] = useState("COPY");
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
+  const [sendError, setSendError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const { data: ttlData } = useQuery({
@@ -81,11 +82,13 @@ const Page = () => {
         { query: { roomId } },
       );
     },
+    onError: () => setSendError("Failed to send message. Please try again."),
   });
 
   const handleSend = (text: string) => {
     if (!text.trim() || isPending) return;
     setInput("");
+    setSendError(null);
     sendMessage({ text });
     inputRef.current?.focus();
   };
@@ -198,6 +201,11 @@ const Page = () => {
       </div>
 
       <div className="border-t border-zinc-800 bg-zinc-900/30 p-4">
+        {sendError && (
+          <div className="mb-3 border border-red-900 bg-red-950/50 p-3 text-xs text-red-400">
+            {sendError}
+          </div>
+        )}
         <div className="flex gap-4">
           <div className="group relative flex-1">
             <span className="absolute top-1/2 left-4 -translate-y-1/2 animate-pulse text-green-500">
