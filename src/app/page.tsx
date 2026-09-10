@@ -64,7 +64,7 @@ function Lobby() {
 
         <div className="space-y-2 text-center">
           <h1 className="text-2xl font-bold tracking-tight text-green-500">
-            {">"}private_chat
+            {">"}echo
           </h1>
           <p className="text-sm text-zinc-500">
             A private, self-destructing chat room.
