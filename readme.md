@@ -1,5 +1,7 @@
 # Echo
 
+![Echo](public/hero.png)
+
 Overview
 
 - Small private, self-destructing chat built with Next.js and Elysia.
