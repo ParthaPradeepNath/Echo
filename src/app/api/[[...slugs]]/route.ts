@@ -85,7 +85,9 @@ const messages = new Elysia({ prefix: "/messages" })
       // housekeeping(ttl - time to live in redis)
       const remaining = await redis.ttl(`meta:${roomId}`);
 
-      await redis.expire(`messages:${roomId}`, remaining);
+      if (remaining > 0) {
+        await redis.expire(`messages:${roomId}`, remaining);
+      }
     },
     {
       query: z.object({ roomId: z.string() }),
