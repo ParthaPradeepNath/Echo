@@ -176,27 +176,43 @@ const Page = () => {
             </p>
           </div>
         )}
-        {messages?.messages.map((msg) => (
-          <div key={msg.id} className="flex flex-col items-start">
-            <div className="group max-w-[80%]">
-              <div className="mb-1 flex items-baseline gap-3">
-                <span
-                  className={`text-xs font-bold ${
-                    msg.sender === username ? "text-green-500" : "text-blue-500"
+        {messages?.messages.map((msg) => {
+          const isOwn = msg.sender === username;
+          return (
+            <div
+              key={msg.id}
+              className={`flex ${isOwn ? "justify-end" : "justify-start"}`}
+            >
+              <div
+                className={`max-w-[80%] rounded-lg px-4 py-2 ${
+                  isOwn
+                    ? "rounded-br-sm bg-green-700/80"
+                    : "rounded-bl-sm bg-zinc-800"
+                }`}
+              >
+                <div
+                  className={`mb-1 flex items-baseline gap-3 ${
+                    isOwn ? "justify-end" : "justify-start"
                   }`}
                 >
-                  {msg.sender === username ? "You" : msg.sender}
-                </span>
-                <span className="text-[10px] text-zinc-600">
-                  {format(msg.timestamp, "hh:mm a")}
-                </span>
+                  <span
+                    className={`text-xs font-bold ${
+                      isOwn ? "text-green-200" : "text-blue-400"
+                    }`}
+                  >
+                    {isOwn ? "You" : msg.sender}
+                  </span>
+                  <span className="text-[10px] text-zinc-400">
+                    {format(msg.timestamp, "hh:mm a")}
+                  </span>
+                </div>
+                <p className="text-sm leading-relaxed break-words text-zinc-100">
+                  {msg.text}
+                </p>
               </div>
-              <p className="text-sm leading-relaxed break-all text-zinc-300">
-                {msg.text}
-              </p>
             </div>
-          </div>
-        ))}
+          );
+        })}
         <div ref={messagesEndRef} />
       </div>
 
