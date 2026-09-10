@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const ANIMALS = ["lion", "tiger", "bear", "wolf", "fox"];
 // To persist username across sessions or page reloads
@@ -11,23 +11,14 @@ const generateUsername = () => {
 };
 
 export const useUsername = () => {
-  const [username, setUsername] = useState("");
+  const [username] = useState(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) return stored;
 
-  useEffect(() => {
-    const main = () => {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        setUsername(stored);
-        return;
-      }
-
-      const generated = generateUsername();
-      localStorage.setItem(STORAGE_KEY, generated);
-      setUsername(generated);
-    };
-
-    main();
-  }, []);
+    const generated = generateUsername();
+    localStorage.setItem(STORAGE_KEY, generated);
+    return generated;
+  });
 
   return { username };
 };
